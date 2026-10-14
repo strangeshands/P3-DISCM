@@ -1,14 +1,83 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Frame • Local video library</title><link rel="stylesheet" href="/style.css"><script src="/app.js" defer></script></head>
-<body>
-<header><a class="brand" href="/">▣ frame<span>LOCAL VIDEO LIBRARY</span></a><span class="local"><i></i> Local storage</span></header>
-<main>
-<section class="intro"><div><p class="eyebrow">YOUR MEDIA, IN ONE PLACE</p><h1>A home for your videos.</h1><p>Upload a video. Hover for a quick preview. Click to watch.</p></div><div class="count"><strong id="count">0</strong><span>videos in your library</span></div></section>
-<section class="upload" id="dropzone"><div class="upload-icon">↑</div><div><h2>Add to your library</h2><p>Drop videos here or choose files from your device.</p><small>MP4, WebM, OGG, MOV, M4V · Up to 500 MB per video</small></div><button id="choose">Choose videos <span>＋</span></button><input id="files" type="file" accept=".mp4,.webm,.ogg,.mov,.m4v" multiple hidden></section>
-<div id="status" role="status" aria-live="polite"></div>
-<section><div class="library-heading"><h2>Your library <span id="badge">0</span></h2><label class="search">⌕ <input id="search" type="search" placeholder="Search videos" aria-label="Search videos"></label></div><div class="gallery" id="gallery"></div><div class="empty" id="empty"><span>▤</span><h3>Your first video belongs here.</h3><p>Choose a video above to start building your library.</p></div></section>
-<footer>Saved on this computer <span>10-second previews · Full playback on click</span></footer>
-</main>
-<dialog id="player"><div class="player-heading"><h2 id="player-title"></h2><button id="close" aria-label="Close video">✕</button></div><video id="full-video" controls playsinline></video><p id="playback-error" role="status"></p></dialog>
-</body></html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Frame • Local video library</title>
+        <link rel="stylesheet" href="/style.css" />
+        <script src="/app.js" defer></script>
+    </head>
+    <body>
+        <header>
+            <a class="brand" href="/">▣ frame<span>LOCAL VIDEO LIBRARY</span></a
+            ><span class="local"><i></i> Local storage</span>
+        </header>
+        <main>
+            <section class="intro">
+                <div>
+                    <p class="eyebrow">YOUR MEDIA, IN ONE PLACE</p>
+                    <h1>A home for your videos.</h1>
+                    <p>
+                        Upload a video. Hover for a quick preview. Click to
+                        watch.
+                    </p>
+                </div>
+                <div class="count">
+                    <strong id="count">0</strong
+                    ><span>videos in your library</span>
+                </div>
+            </section>
+            <section class="upload" id="dropzone">
+                <div class="upload-icon">↑</div>
+                <div>
+                    <h2>Add to your library</h2>
+                    <p>Drop videos here or choose files from your device.</p>
+                    <small
+                        >MP4, WebM, OGG, MOV, M4V · Up to 500 MB per
+                        video</small
+                    >
+                </div>
+                <button id="choose">Choose videos <span>＋</span></button
+                ><input
+                    id="files"
+                    type="file"
+                    accept=".mp4,.webm,.ogg,.mov,.m4v"
+                    multiple
+                    hidden
+                />
+            </section>
+            <div id="status" role="status" aria-live="polite"></div>
+            <section>
+                <div class="library-heading">
+                    <h2>Your library <span id="badge">0</span></h2>
+                    <label class="search"
+                        >⌕
+                        <input
+                            id="search"
+                            type="search"
+                            placeholder="Search videos"
+                            aria-label="Search videos"
+                    /></label>
+                </div>
+                <div class="gallery" id="gallery"></div>
+                <div class="empty" id="empty">
+                    <span>▤</span>
+                    <h3>Your first video belongs here.</h3>
+                    <p>Choose a video above to start building your library.</p>
+                </div>
+            </section>
+            <footer>
+                Saved on this computer
+                <span>10-second previews · Full playback on click</span>
+            </footer>
+        </main>
+        <dialog id="player">
+            <div class="player-heading">
+                <h2 id="player-title"></h2>
+                <button id="close" aria-label="Close video">✕</button>
+            </div>
+            <video id="full-video" controls playsinline></video>
+            <p id="playback-error" role="status"></p>
+        </dialog>
+    </body>
+</html>
