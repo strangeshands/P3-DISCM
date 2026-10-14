@@ -1,55 +1,79 @@
-# Frame — Media upload base app
+# Frame — Go media upload base app
 
-A beginner-friendly local starting point for the producer–consumer exercise.
+A local video library with a Go backend and plain HTML, CSS, and JavaScript. No Python, external Go packages, or frontend build tools are required.
 
 ## Run
 
-Install Python 3.10 or newer. No packages, build step, or compilation needed.
+Install Go 1.22 or newer, then open a terminal in this folder:
 
 ```sh
-cd media-upload-base
-python3 server.py
+go run .
 ```
 
-Open http://127.0.0.1:8000 in your browser. Stop the server with Ctrl+C.
-If port 8000 is busy, use `python3 server.py --port 8080`.
+Open http://127.0.0.1:8000. Stop with Ctrl+C. If the port is occupied:
 
-## Features
+```sh
+go run . -port 8080
+```
 
-- Upload one or multiple videos through a file picker or drag and drop.
-- Save all uploaded videos in the `uploads/` folder; the library survives restarts.
-- Search the library by original filename.
-- Hover over a card to play its first 10 seconds silently, then stop and reset. Shorter videos stop at their end.
-- Click a card to open the full video with sound and playback controls. Close with the X button or Escape.
-- Display upload results, file sizes, and dates.
+Videos are saved in `uploads/` relative to your working directory. To choose another folder:
 
-MP4, WebM, OGG, MOV, and M4V files are accepted, up to 500 MB each. Playback depends on your browser's supported codecs; H.264 MP4 is a good choice. Files are preserved as uploaded. Extension checks do not verify the video contents.
+```sh
+go run . -uploads /path/to/videos
+```
 
-## How it works
+## Build a standalone app
 
-The browser sends each chosen file sequentially to `POST /api/videos`. The Python server reads the request in chunks and writes it to a temporary `.part` file. Only completed uploads appear in the library. A random filename avoids accidental overwrites, while a small JSON sidecar preserves the original name. `GET /api/videos` lists saved videos. `GET /videos/<filename>` serves video bytes with HTTP Range support for playback and seeking.
+macOS/Linux:
 
-`HTTPServer` handles one request at a time. No threads, worker pools, queues, synchronization, producer instances, gRPC, separate VMs, duplicate detection, or compression are implemented. A long upload can delay playback or library loading; that is intentional for this sequential base version. The p, c, and q inputs belong to the later concurrency version and are omitted here.
+```sh
+go build -o frame .
+./frame
+```
 
-## Source layout
+Windows:
 
-- `server.py` — local server, upload saving, library listing, and video serving.
-- `static/index.html` — gallery, upload interface, and video dialog.
-- `static/style.css` — responsive visual styling.
-- `static/app.js` — sequential uploads, search, hover previews, and playback.
-- `uploads/` — locally saved videos and filename metadata.
+```powershell
+go build -o frame.exe .
+.\frame.exe
+```
 
-The server listens only on this computer. This is a local learning app, without authentication or production deployment configuration.
+The interface is embedded in the executable; no separate static folder is needed beside a built app. Build for the operating system where you will run it.
 
-## Manual demo checklist
+## Included
 
-1. Start with an empty library and upload a playable MP4.
-2. Check that the video appears and its file is saved in `uploads/`.
-3. Hover: preview stops and resets at 10 seconds. Leaving the card resets sooner.
-4. Click: full playback opens with controls; Escape closes it.
-5. Upload several videos: they are sent one after another.
-6. Restart the server: saved videos remain available.
-7. Search by filename and try a search with no matches.
-8. Try a disallowed file type and an empty video file: errors appear.
+- Select videos or drag and drop them into the browser.
+- Multiple selected files upload one after another.
+- Files persist in one folder and appear in a searchable gallery after restart.
+- Hover to silently preview the first 10 seconds; moving away resets the preview. Short videos stop at their end.
+- Click for full video playback with sound and controls; close with X or Escape.
+- File sizes, dates, upload results, and playback error messages.
 
-The video demonstration and slides can be added when the final test cases and concurrency requirements are introduced.
+Supported extensions: MP4, WebM, OGG, MOV, M4V. Maximum: 500 MB per file. Browser codec support determines playback; try H.264 MP4 or WebM. Extension checks do not validate the video contents. Files are saved without conversion or compression.
+
+## What happens internally
+
+1. `static/app.js` sends each selected file to `POST /api/videos` sequentially.
+2. `main.go` streams the body to a temporary `.part` file, keeping memory use small.
+3. Once complete, the file receives a random storage name. A JSON sidecar keeps the original filename. Repeated filenames do not overwrite earlier uploads.
+4. `GET /api/videos` reads the saved library; incomplete uploads are excluded.
+5. `GET /videos/<id>` uses Go's file serving with byte-range support for video playback and seeking.
+
+No producer/consumer workers, user-created goroutines, queue, synchronization logic, p/c/q settings, gRPC, VMs, duplicate detection, or compression are included. Go's standard HTTP server internally manages connections concurrently; this app adds no concurrency exercise logic. Browser uploads are sequential. This is a local learning app, listening on `127.0.0.1` without authentication.
+
+## Source files
+
+- `main.go`: Go server, upload saving, library listing, and embedded interface.
+- `static/index.html`: upload interface, gallery, and player dialog.
+- `static/style.css`: responsive styling.
+- `static/app.js`: uploads, search, hover previews, and playback.
+- `main_test.go`: upload, persistence, range serving, validation, and route tests.
+- `uploads/`: saved videos and original-name metadata.
+
+## Verify
+
+```sh
+go test ./...
+```
+
+For a manual demo: upload a playable MP4, hover for 10 seconds, click to watch, search its filename, restart the app, and confirm it remains. Also try multiple uploads and an unsupported file type. Browser hover and actual codec playback require manual testing. Slides and a recorded demonstration are not included in this base app.
